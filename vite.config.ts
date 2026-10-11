@@ -7,7 +7,7 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 // GitHub Pages: on GitHub Actions, serve under /<repo>/ unless it's a <user>.github.io repo.
-const ghRepo = process.env.GITHUB_REPOSITORY?.split("/")[1];
+const ghRepo = process.env["GITHUB_REPOSITORY"]?.split("/")[1];
 const base = ghRepo && !ghRepo.endsWith(".github.io") ? `/${ghRepo}/` : "/";
 
 export default defineConfig({
