@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
@@ -24,8 +27,16 @@ jobs:
       - name: Build the project
         run: npm run build
 
+      - name: Prepare static site
+        run: |
+          mkdir -p site
+          if [ -d dist/client ]; then cp -r dist/client/. site/; else cp -r dist/. site/; fi
+          test -f site/index.html || (echo "index.html missing" && ls -R dist && exit 1)
+          cp site/index.html site/404.html
+          touch site/.nojekyll
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./site
